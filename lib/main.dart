@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/views/navBarScreen/navBarScreen.dart';
 import 'package:todo_app/views/splashScreen/splashScreen.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: NavBarScreen(),
     );
   }
 }

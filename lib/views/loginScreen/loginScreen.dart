@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/utils/colorConstants.dart';
-import 'package:todo_app/views/dummydb.dart';
-import 'package:todo_app/views/homeScreen/homeScreen.dart';
+
+import 'package:todo_app/views/navBarScreen/navBarScreen.dart';
 import 'package:todo_app/views/registerScreen/registration_screen.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class Loginscreen extends StatefulWidget {
 class _LoginscreenState extends State<Loginscreen> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -27,17 +28,20 @@ class _LoginscreenState extends State<Loginscreen> {
         padding: const EdgeInsets.all(15.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
+            // physics: NeverScrollableScrollPhysics(),
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.keyboard_arrow_left,
-                  color: Colorconstants.DarkThemeTextColor,
-                  size: 40,
+              Align(
+                alignment: Alignment.topLeft,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.keyboard_arrow_left,
+                    color: Colorconstants.DarkThemeTextColor,
+                    size: 40,
+                  ),
                 ),
               ),
               SizedBox(
@@ -124,36 +128,48 @@ class _LoginscreenState extends State<Loginscreen> {
                 height: 80,
               ),
               InkWell(
-                onTap: () {
-                  String username = _usernameController.text;
-                  String password = _passwordController.text;
-                  if (_formKey.currentState!.validate()) {
-                    if (username == usernamereg && password == passwordreg) {
-                      // Credentials are correct, navigate to the next screen
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ),
-                          (routes) => false);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('Invalid username or password')));
-                    }
+                onTap: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  final prefs = await SharedPreferences.getInstance();
+                  final storedUsername = prefs.getString('username');
+                  final storedPassword = prefs.getString('password');
+                  if (_usernameController.text == storedUsername &&
+                      _passwordController.text == storedPassword) {
+                    // Credentials are correct, navigate to the next screen
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NavBarScreen(),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('Invalid username or password'),
+                      ),
+                    );
                   }
+                  setState(() {
+                    _isLoading = false;
+                  });
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   height: 50,
                   child: Center(
-                    child: Text(
-                      "LOGIN",
-                      style: TextStyle(
-                          color: Colorconstants.DarkThemeTextColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17),
-                    ),
+                    child: _isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "LOGIN",
+                            style: TextStyle(
+                                color: Colorconstants.DarkThemeTextColor,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17),
+                          ),
                   ),
                   decoration: BoxDecoration(
                       color: Colorconstants.ThemeColor,

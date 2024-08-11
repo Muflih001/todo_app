@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/utils/colorConstants.dart';
 import 'package:todo_app/views/dummydb.dart';
 import 'package:todo_app/views/loginScreen/loginScreen.dart';
@@ -11,9 +12,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _regemailController = TextEditingController();
-
   final _regpasswordController = TextEditingController();
-
   final _regconformpasswordController = TextEditingController();
 
   @override
@@ -32,9 +31,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             right: 20,
           ),
           child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: ListView(
+              physics: NeverScrollableScrollPhysics(),
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -50,7 +50,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         )),
                   ],
                 ),
-                Container(
+                Align(
+                  alignment: Alignment.center,
                   child: Text(
                     "Register",
                     textAlign: TextAlign.left,
@@ -163,25 +164,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                       SizedBox(height: 40),
                       InkWell(
-                        onTap: () {
-                          // Todo : write code  to navigate to login screen on successful registration
+                        onTap: () async {
                           if (_formKey.currentState!.validate()) {
                             usernamereg = _regemailController.text;
                             passwordreg = _regpasswordController.text;
                             if (_regpasswordController.text ==
                                 _regconformpasswordController.text) {
-                              // Credentials are correct, navigate to the next screen
+                              // Store the username and password using shared_preferences
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString('username', usernamereg);
+                              await prefs.setString('password', passwordreg);
+                              // Navigate to the next screen
                               Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Loginscreen(),
-                                  ));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Loginscreen(),
+                                ),
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                          'Invalid username or password')));
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Invalid username or password'),
+                                ),
+                              );
                             }
                           }
                         },
@@ -292,7 +299,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 Spacer(),
                 Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Already have an account?",
