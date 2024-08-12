@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_app/utils/colorConstants.dart';
+import 'package:todo_app/views/createTask/createTask.dart';
 import 'package:todo_app/views/homeScreen/homeScreen.dart';
+import 'package:todo_app/views/homeScreen/taskCard.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -17,9 +19,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
     Container(
       color: Colors.red,
     ),
-    Container(
-      color: Colors.green,
-    ),
+    Createtask(),
     Container(
       color: Colors.yellow,
     ),
