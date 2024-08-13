@@ -37,37 +37,52 @@ class _NavBarScreenState extends State<NavBarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: myScreens[selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: selectedIndex,
-          backgroundColor: Colors.black,
-          selectedItemColor: Colors.white,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-          unselectedItemColor: Colors.grey[700],
-          type: BottomNavigationBarType.fixed,
-          onTap: (value) {
-            selectedIndex = value;
-            setState(() {});
-          },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month_outlined), label: 'Search'),
-            BottomNavigationBarItem(
-                icon: Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                      color: Colorconstants.ThemeColor,
-                      borderRadius: BorderRadius.circular(30)),
-                  child: Center(child: Icon(Icons.add)),
-                ),
-                label: ''),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.file_download_sharp), label: 'Download'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: 'Profile')
-          ]),
+      backgroundColor: Colorconstants.DarkThemeBackgroundColor,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: BottomNavigationBar(
+              currentIndex: selectedIndex,
+              backgroundColor: Colors.black,
+              selectedItemColor: Colors.amber[100],
+              selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+              unselectedItemColor: Colors.grey,
+              type: BottomNavigationBarType.fixed,
+              onTap: (value) {
+                selectedIndex = value;
+                setState(() {});
+              },
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.home_outlined), label: 'Home'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.calendar_month_outlined), label: 'Search'),
+                BottomNavigationBarItem(
+                    icon: Container(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            color: Colors.amber[100],
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Center(
+                            child: Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 30,
+                        )),
+                      ),
+                    ),
+                    label: ''),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.file_download_sharp), label: 'Download'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person_outline), label: 'Profile')
+              ]),
+        ),
+      ),
     );
   }
 }

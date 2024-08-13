@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/utils/colorConstants.dart';
 
 class TaskCard extends StatefulWidget {
   const TaskCard({
@@ -10,12 +11,18 @@ class TaskCard extends StatefulWidget {
     this.onEdit,
     // this.bcolor,
     this.onSwipe,
+    this.endTime = '',
+    this.startTime = '',
+    this.priority = '',
   });
   final void Function()? onDelete;
   final void Function(String, String, Color?)? onEdit;
   final String title;
   final String description;
   final String date;
+  final String endTime;
+  final String startTime;
+  final String priority;
   //final Color? bcolor;
   final void Function()? onSwipe;
 
@@ -49,7 +56,8 @@ class _TaskCardState extends State<TaskCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0, left: 10, right: 10),
+      padding:
+          const EdgeInsets.only(bottom: 10.0, left: 15, right: 15, top: 10),
       child: InkWell(
         onTap: () {
           setState(() {
@@ -63,8 +71,10 @@ class _TaskCardState extends State<TaskCard> {
           ),
           width: double.infinity,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.amber[100]),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25)),
+              color: Colors.grey[800]),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -89,7 +99,9 @@ class _TaskCardState extends State<TaskCard> {
                           maxLines: _isExpanded ? null : 1,
                           overflow: _isExpanded ? null : TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 27, fontWeight: FontWeight.w500),
+                              fontSize: 27,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white),
                         ),
                   Row(
                     children: [
@@ -109,7 +121,10 @@ class _TaskCardState extends State<TaskCard> {
                             });
                           }
                         },
-                        icon: Icon(_isEditMode ? Icons.save : Icons.edit),
+                        icon: Icon(
+                          _isEditMode ? Icons.save : Icons.edit,
+                          color: Colors.white,
+                        ),
                       ),
                       IconButton(
                           onPressed: () {
@@ -139,29 +154,63 @@ class _TaskCardState extends State<TaskCard> {
                               ),
                             );
                           },
-                          icon: Icon(Icons.delete)),
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          )),
                     ],
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: _isEditMode
-                    ? TextFormField(
-                        controller: _descriptionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Description',
-                        ),
-                        maxLines: null,
-                      )
-                    : Text(
-                        widget.description,
-                        maxLines: _isExpanded ? null : 4,
-                        overflow: _isExpanded ? null : TextOverflow.ellipsis,
-                      ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: _isEditMode
+                        ? TextFormField(
+                            controller: _descriptionController,
+                            decoration: const InputDecoration(
+                              labelText: 'Description',
+                            ),
+                            maxLines: null,
+                          )
+                        : Text(
+                            widget.description,
+                            maxLines: _isExpanded ? null : 4,
+                            overflow:
+                                _isExpanded ? null : TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.white, fontSize: 17),
+                          ),
+                  ),
+                  Spacer(),
+                  Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 1),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: widget.priority == 'High'
+                                  ? Colors.red
+                                  : widget.priority == 'Medium'
+                                      ? Colors.yellow
+                                      : Colors.green,
+                              width: 2),
+                          borderRadius: BorderRadius.circular(30)),
+                      child: Text(
+                        widget.priority,
+                        style: TextStyle(
+                            color: widget.priority == 'High'
+                                ? Colors.red
+                                : widget.priority == 'Medium'
+                                    ? Colors.yellow
+                                    : Colors.green,
+                            fontWeight: FontWeight.w500),
+                      ))
+                ],
+              ),
+              SizedBox(
+                height: 5,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // _isEditMode
                   //     ? Colourbox(
@@ -177,10 +226,20 @@ class _TaskCardState extends State<TaskCard> {
                   Row(
                     children: [
                       Text(
+                        'Due Date : ',
+                        style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      Text(
                         widget.date,
                         style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
                       ),
+
                       // IconButton(
                       //     onPressed: () {
                       //       Share.share(
@@ -189,8 +248,37 @@ class _TaskCardState extends State<TaskCard> {
                       //     icon: const Icon(Icons.share)),
                     ],
                   ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time_rounded,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        widget.startTime,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                      ),
+                      Text(
+                        " - ${widget.endTime}",
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ],
               ),
+              SizedBox(
+                height: 5,
+              )
             ],
           ),
         ),

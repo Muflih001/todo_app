@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/utils/colorConstants.dart';
+import 'package:todo_app/views/createProfile/createProfile.dart';
 
 import 'package:todo_app/views/navBarScreen/navBarScreen.dart';
 import 'package:todo_app/views/registerScreen/registration_screen.dart';
@@ -18,6 +19,7 @@ class _LoginscreenState extends State<Loginscreen> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -101,7 +103,7 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
               TextFormField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
                 obscuringCharacter: '.',
                 cursorColor: Colorconstants.DarkThemeTextColor,
                 style: TextStyle(color: Colorconstants.DarkThemeTextColor),
@@ -115,6 +117,20 @@ class _LoginscreenState extends State<Loginscreen> {
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey, width: 2),
                       borderRadius: BorderRadius.circular(5)),
+                  suffixIcon: IconButton(
+                    // Add a suffix icon
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
                 ),
                 validator: (value) {
                   if (value != null && value.length >= 8) {
@@ -141,7 +157,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NavBarScreen(),
+                        builder: (context) => ProfileScreen(),
                       ),
                       (Route<dynamic> route) => false,
                     );
